@@ -1,0 +1,16 @@
+local UserInputService = game:GetService("UserInputService")
+local infJumpActive = false
+
+local function toggleInfJump()
+    infJumpActive = not infJumpActive
+    return infJumpActive and "Inf Jump ON" or "Inf Jump"
+end
+
+UserInputService.JumpRequest:Connect(function()
+    if infJumpActive then
+        local hum = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum:ChangeState(Enum.HumanoidStateType.Jumping)
+        end
+    end
+end)
