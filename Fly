@@ -1,0 +1,51 @@
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
+
+local flyActive = false
+local flyVelocity
+local alignCharLook
+local flyForceValue = 60
+
+local function enableFly(character, controlModule)
+    if flyActive then return end
+    flyActive = true
+
+    local root = character:WaitForChild("HumanoidRootPart")
+    flyVelocity = Instance.new("LinearVelocity")
+    flyVelocity.Attachment0 = root.RootAttachment
+    flyVelocity.RelativeTo = Enum.ActuatorRelativeTo.World
+    flyVelocity.MaxForce = math.huge
+    flyVelocity.Parent = root
+
+    alignCharLook = Instance.new("AlignOrientation")
+    alignCharLook.Attachment0 = root.RootAttachment
+    alignCharLook.Mode = Enum.OrientationAlignmentMode.OneAttachment
+    alignCharLook.MaxTorque = math.huge
+    alignCharLook.Responsiveness = 50
+    alignCharLook.Parent = root
+
+    RunService.Heartbeat:Connect(function()
+        if not flyActive then return end
+        local dir = controlModule:GetMoveVector()
+        flyVelocity.VectorVelocity = 
+            (Camera.CFrame.LookVector * -dir.Z * flyForceValue)
+            + (Camera.CFrame.RightVector * dir.X * flyForceValue)
+        alignCharLook.CFrame = Camera.CFrame.Rotation
+    end)
+end
+
+local function disableFly()
+    flyActive = false
+    if flyVelocity then flyVelocity:Destroy() end
+    if alignCharLook then alignCharLook:Destroy() end
+end
+
+local function toggleFly(character, controlModule)
+    if flyActive then
+        disableFly()
+        return "Fly"
+    else
+        enableFly(character, controlModule)
+        return "Fly ON"
+    end
+end
