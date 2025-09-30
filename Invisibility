@@ -1,0 +1,37 @@
+local invisOn = false
+
+local function setTransparency(character, t)
+    for _, part in ipairs(character:GetDescendants()) do
+        if part:IsA("BasePart") or part:IsA("Decal") then
+            part.Transparency = t
+        end
+    end
+end
+
+local function toggleInvisibility(player)
+    invisOn = not invisOn
+    if invisOn then
+        local savedPos = player.Character.HumanoidRootPart.CFrame
+        task.wait()
+        player.Character:MoveTo(Vector3.new(-25.95, 84, 3537.55))
+        task.wait(0.15)
+        local seat = Instance.new('Seat', workspace)
+        seat.Anchored = false
+        seat.CanCollide = false
+        seat.Name = 'invischair'
+        seat.Transparency = 1
+        seat.Position = Vector3.new(-25.95, 84, 3537.55)
+        local weld = Instance.new("Weld", seat)
+        weld.Part0 = seat
+        weld.Part1 = player.Character:FindFirstChild("Torso") or player.Character:FindFirstChild("UpperTorso")
+        task.wait()
+        seat.CFrame = savedPos
+        setTransparency(player.Character, 0.5)
+        return "Invis (on)"
+    else
+        local invisChair = workspace:FindFirstChild('invischair')
+        if invisChair then invisChair:Destroy() end
+        setTransparency(player.Character, 0)
+        return "Invis (off)"
+    end
+end
