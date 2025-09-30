@@ -1,0 +1,17 @@
+local speedModes = {
+    {name="Walk", value=16},
+    {name="Cruise", value=50},
+    {name="Sprint", value=100},
+    {name="Overdrive", value=200},
+}
+
+local speedIndex = 1
+local function cycleSpeed(player)
+    local hum = (player.Character or player.CharacterAdded:Wait()):FindFirstChildOfClass("Humanoid")
+    if not hum then return "No Humanoid" end
+    speedIndex += 1
+    if speedIndex > #speedModes then speedIndex = 1 end
+    local mode = speedModes[speedIndex]
+    hum.WalkSpeed = mode.value
+    return "Speed: " .. mode.name
+end
