@@ -1,0 +1,17 @@
+local noclipActive = false
+local RunService = game:GetService("RunService")
+
+RunService.Stepped:Connect(function()
+    if noclipActive and game.Players.LocalPlayer.Character then
+        for _, part in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    end
+end)
+
+local function toggleNoclip()
+    noclipActive = not noclipActive
+    return noclipActive and "Noclip ON" or "Noclip"
+end
