@@ -1,0 +1,15 @@
+local gravityModes = {
+    {name="Earth", value=196.2},
+    {name="Light", value=100},
+    {name="Lunar", value=50},
+    {name="Zero-G", value=0},
+}
+
+local gravityIndex = 1
+local function cycleGravity()
+    gravityIndex += 1
+    if gravityIndex > #gravityModes then gravityIndex = 1 end
+    local mode = gravityModes[gravityIndex]
+    workspace.Gravity = mode.value
+    return "Gravity: " .. mode.name
+end
